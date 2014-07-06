@@ -25,6 +25,7 @@ public class XOChatServerThread extends Thread {
 				parent.setNewClient(aClient);
 				//делаем новый поток для работы с клиентом
 				aThread = new XOChatClientProcessingThread(aClient, this);
+				aThread.start();
 			} catch (IOException e) {
 				addToMainServerLog("Chat server can't connecting with client!\n");
 				e.printStackTrace();

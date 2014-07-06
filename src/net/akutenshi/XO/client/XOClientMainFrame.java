@@ -110,5 +110,14 @@ public class XOClientMainFrame extends JFrame {
 		JSeparator separator = new JSeparator();
 		separator.setBounds(570, 42, 214, 2);
 		contentPane.add(separator);
+		
+		JButton btnDisconnect = new JButton("Disconnect");
+		btnDisconnect.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				clientSocket.disconnect();
+			}
+		});
+		btnDisconnect.setBounds(570, 151, 214, 23);
+		contentPane.add(btnDisconnect);
 	}
 }

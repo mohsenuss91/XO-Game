@@ -30,13 +30,14 @@ public class XOServer {
 	}
 	
 	public void LaunchChatServer() {
-		log += "Launching chat server...\n";		
+		addToLog("Launching chat server...\n");		
 		try {
 			ServerSocket chatServer = new ServerSocket(chatPort, 0, InetAddress.getLocalHost());
-			log += "Chat server is launching!\n";
+			addToLog("Chat server is launching!\n");
 			chatServerThread = new XOChatServerThread(chatServer, this);
+			chatServerThread.start();
 		} catch (IOException e) {
-			log += "Can't launching server! Port " + Integer.toString(chatPort) + " is using now.\n";
+			addToLog("Can't launching server! Port " + Integer.toString(chatPort) + " is using now.\n");
 			e.printStackTrace();
 		}
 	}
@@ -58,11 +59,11 @@ public class XOServer {
 		clientList.remove(findClientIndex(name));
 	}
 	
-	public void addToLog(String in) {
+	public synchronized void addToLog(String in) {
 		log += in;
 	}
 	
-	public String sendLog() {
+	public synchronized String sendLog() {
 		String out = log;
 		log = "";
 		return out;

@@ -23,10 +23,22 @@ public class XOClientSocket {
 			try {
 				DataInputStream in = new DataInputStream(clientChatSocket.getInputStream());
 				DataOutputStream out = new DataOutputStream(clientChatSocket.getOutputStream());
-				out.writeUTF(name);
-				clientChatSocket.close();
+				out.writeUTF(name + "\n");
+				out.flush();
+				//clientChatSocket.close();
 			} catch (IOException e) {
 				System.out.print("Can't open stream\n");
+				e.printStackTrace();
+			}
+		}
+	}
+	
+	public void disconnect() {
+		if (clientChatSocket != null) {
+			try {
+				clientChatSocket.close();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}

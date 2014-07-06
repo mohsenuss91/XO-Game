@@ -1,20 +1,19 @@
 package net.akutenshi.XO.server;
 
-import java.awt.BorderLayout;
-import java.awt.EventQueue;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.lang.ProcessBuilder.Redirect;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.border.EmptyBorder;
-import javax.swing.JList;
-import javax.swing.JTextArea;
-import javax.swing.JLabel;
-import javax.swing.JTextField;
 import javax.swing.JButton;
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JTextArea;
+import javax.swing.JTextField;
+import javax.swing.Timer;
+import javax.swing.border.EmptyBorder;
 
 public class XOServerFrame extends JFrame {
 
@@ -23,6 +22,7 @@ public class XOServerFrame extends JFrame {
 	private JTextField hostIPField;
 	private XOServer server = null;
 	private JTextArea logArea;
+	private Timer timer;
 
 	/**
 	 * Create the frame.
@@ -107,9 +107,23 @@ public class XOServerFrame extends JFrame {
 		JButton stopButton = new JButton("Stop server");
 		stopButton.setBounds(273, 44, 246, 23);
 		contentPane.add(stopButton);
+		
+		timer = new Timer(500, new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) { 
+				refreshLog();
+				timer.restart();
+			}
+		});
+		timer.start();
 	}
 	
 	private void refreshLog() {
-		logArea.append(server.sendLog());
+		if (server != null) {
+			logArea.append(server.sendLog());
+		}
 	}
+
+	
 }

@@ -1,8 +1,11 @@
 package net.akutenshi.XO.server;
 
+import java.io.BufferedReader;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.Reader;
 import java.net.Socket;
 
 public class XOChatClientProcessingThread extends Thread {
@@ -18,10 +21,10 @@ public class XOChatClientProcessingThread extends Thread {
 	@Override
 	public void run() {
 		//потоки для общения с клиентом
-		DataInputStream in = null;
+		BufferedReader in = null;
 		DataOutputStream out = null;
 		try {
-			in = new DataInputStream(client.getClientSocket().getInputStream());
+			in = new BufferedReader(new InputStreamReader(client.getClientSocket().getInputStream()));
 			out = new DataOutputStream(client.getClientSocket().getOutputStream());
 		} catch (IOException e) {
 			parent.addToMainServerLog("Error: socket closed, can't open streams!\n");
@@ -29,11 +32,13 @@ public class XOChatClientProcessingThread extends Thread {
 			return;
 		}
 		//при первом соединении он посылает свое имя
+		String tmp = "";
 		parent.addToMainServerLog("Client name :");
 		try {
-			client.setName(in.readLine());
+			tmp = in.readLine();
+			client.setName(tmp);
+			parent.addToMainServerLog(client.getName() + '\n');
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		String message;
@@ -46,7 +51,10 @@ public class XOChatClientProcessingThread extends Thread {
 			i = 0;
 			c = ' ';
 			try {
-				message = in.readLine();	
+				message = in.readLine();
+				if (message == null) {
+					continue;
+				}
 				//определяем получателя, формуируем отправляемое сообщение	
 				while (c != '$') {
 					destinationName += message.charAt(i);
